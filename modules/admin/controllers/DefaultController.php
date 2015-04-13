@@ -8,6 +8,7 @@ class DefaultController extends Controller
 {
     public function actionIndex()
     {
+    	//committed by tiger.guo 150413
         return $this->render('index');
     }
 }
