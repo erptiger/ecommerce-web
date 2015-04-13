@@ -27,7 +27,7 @@ $config = [
         				'class' => 'Swift_SmtpTransport',
         				'host' => 'smtp.a8.com',
         				'username' => 'tiger.guo',
-        				'password' => '20110314',
+        				'password' => '******',
         				'port' => '25',
         				'encryption' => 'tls',
         		],
