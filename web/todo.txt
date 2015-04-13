@@ -1,0 +1,296 @@
+20150327:
+http://www.yiichina.com/doc/guide/2.0/start-workflow
+http://www.yiiframework.com/download/
+http://www.yiichina.com/doc/guide
+
+
+http://localhost:8084/index.php?r=entry/index
+http://localhost:8084/index.php?r=admin/entry/index
+Yii::trace('AAA');
+
+yii2中文显示问题，显示为乱码？
+app\controllers\entry\EntryController为何不起作用？->http://localhost:8084/index.php?r=admin/entry/index
+能否有多个入口脚本？
+
+20150330:
+<?php var_dump(__DIR__)?>
+<?php var_dump(dirname(__DIR__))?>
+<?= __DIR__?>
+<?php echo __DIR__?>
+
+http://php.net/manual/en/
+
+设置时区：
+<?php 
+    date_default_timezone_set('PRC');
+    echo date('Y-m-d H:i:s')
+    ?>
+<?php var_dump($this);?>
+ $this->layout='@app/views/layouts/manager.php';
+throw new \yii\base\Exception();
+throw new \yii\web\NotFoundHttpException;
+ \yii\web\User()与app\models\User的区别？
+http://localhost:8084/index.php?r=entry/add-user
+
+//能否绑定多个对象
+
+ <?= $form->field($model, 'name') ->label('姓名:') ?> 
+ 等价于
+ <input type="text" id="entryform-name" class="form-control" name="EntryForm[name]">
+ ，关键是name="EntryForm[name]"需要一致，这样controller都可以正确接收到值
+ 
+controller参数为数组：  
+http://localhost:8084/index.php?r=entry/add-users&id[0]=3&id[1]=4&id[3]=5
+
+20150331:
+——————————————————————————————————
+YII2.0 如何去掉URL中的index.php？
+1、apache的httpd.conf中去掉LoadModule rewrite_module modules/mod_rewrite.so注释；
+2、http.conf网站设置AllowOverride None改为AllowOverride All
+3、yii2应用程序框架中'components'增加：
+'urlManager' => [
+    		'enablePrettyUrl' => true,
+    		'showScriptName' => false,//隐藏index.php
+    		//'enableStrictParsing' => false,
+    		//'suffix' => '.html',//后缀，如果设置了此项，那么浏览器地址栏就必须带上.html后缀，否则会报404错误
+    		'rules' => [
+    			//'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+    			],
+    		],
+4、在index.php同级目录中增加.htaccess文件，内容如下：
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php
+————————————————————————
+
+http://localhost:8084/entry/index      		
+
+return $this->renderPartial('index', ['model' => $model]);
+
+foreach ($model as $key => $value) {
+	echo $key.'->'.$value.'</br>';
+}
+
+echo ($request->post("EntryForm")["name"]);
+
+20150401:
+在应用配置中增加:
+'modules' => [
+    'admin' => [
+        'class' => 'app\modules\admin\Module',
+    ],
+]
+http://localhost:8084/admin/default/index
+
+yii的多语言配置：
+————————————————————————————————————————————————————————
+<?php echo \Yii::t('app', '测试中文');?>
+<?php echo \Yii::t('app', 'name_label');?>
+Yii::$app->language='zh-CN';
+1、在web.php中配置
+'i18n' => [
+    			'translations' => [
+    				'app*' => [
+    							'class' => 'yii\i18n\PhpMessageSource',
+    							//'basePath' => '@app/messages',
+    							//'sourceLanguage' => 'en-US',
+    							'fileMap' => [
+    									'app' => 'app.php',
+    									'app/error' => 'error.php',
+    						],
+    					],
+    			],
+    	],
+2、增加文件@app/messages/zh-CN/app.php,如果为ru-RU则增加文件@app/messages/ru-RU/app.php；
+
+3、输入内容
+return [
+		'name_label'=>'姓名',
+		'email_label'=>'邮箱',
+];
+——————————————————————————————————————————————————————————
+Yii::$app->getSession()->get($key)
+Yii::$app->getRequest()->get($key);
+Yii::$app->response->redirect("/site/index");
+
+yii与jquery?
+
+Url的解析？
+Log如何输出到文件？->配置log组件输出到文件。
+Activerecord行为的作用？
+事件的作用？
+系统预定义的别名在哪个文件中定义？
+Db事务处理？
+Jquery ui如何使用？
+文件上传？
+
+
+20150402:
+composer安装：
+1) windows:
+C:\bin>php -r "readfile('https://getcomposer.org/installer');" | php
+创建空的composer.bat
+C:\bin>echo @php "%~dp0composer.phar" %*>composer.bat
+C:\Users\username>composer -V
+2) linuix:
+curl -sS https://getcomposer.org/installer | php
+or
+php -r "readfile('https://getcomposer.org/installer');" | php
+
+yii安装与升级：
+php composer.phar create-project yiisoft/yii2-app-basic basic 2.0.3
+php composer.phar create-project yiisoft/yii2-app-advanced advanced 2.0.3
+php composer.phar require yiisoft/yii2 2.0.3
+php composer.phar require --prefer-dist yiisoft/yii2 2.0.3 
+
+
+window环境下更新至最新版本：
+composer require yiisoft/yii2 2.0.3
+
+yii2-jui安装：
+php composer.phar create-project yiisoft/yii2-jui
+或者
+在composer.json的加入"require": {"yiisoft/yii2-jui": "~2.0.0"}
+
+yii2-captcha安装：
+php composer.phar require --prefer-dist mdmsoft/yii2-captcha "*"
+或者
+在composer.json的加入"require": {"mdmsoft/yii2-captcha": "*"}
+
+bower-asset/jquery-ui: 1.11.*@stable
+<?php var_dump($model->name)?>
+ <?php 
+    	echo DatePicker::widget(
+    		[
+    			'name'  => 'from_date',
+    ])?>
+
+create database yii;
+create user yii identified by 'yii';
+grant all privileges on yii.* to yii@localhost identified by 'yii';    	
+
+grant all privileges on lulucms.* to yii@localhost identified by 'yii';  
+
+在filter中统一设置controller的layout:
+Yii::$app->controller->layout='@app/views/layouts/manager.php';
+
+
+2015-04-03:
+/* $connection =Yii::$app->db;		
+		$trans = $connection->beginTransaction();
+		try {
+			
+			$trans->commit();
+		} catch (Exception $e) {
+			$trans ->rollBack();
+		} */
+
+$connection =Yii::$app->db;				
+		$connection->open();
+		$tables= $connection->schema->getTableNames();		
+		$command = $connection->createCommand("select * from t_drp_material_type where id = :id");
+// 		$command->addColumn($table, $column, $type)
+// 		$command->createTable($table, $columns)
+		$command->bindValue(":id", 1);
+		$results= $command->query();
+		$connection->close();
+				
+通过配置[[yii\db\Connection]]可以实现数据库复制和读写分离
+->如何配置？
+crud:
+Model Class:
+app\models\DrpMaterialType
+
+Search Model Class:
+app\models\DrpMaterialTypeSearch
+
+Controller Class:
+app\modules\admin\controllers\DrpMaterialTypeController
+
+View Path:
+@app/modules/admin/views/drp-material-type
+
+
+gii Code Template增加
+
+DrpMaterialType::findBySql这个函数貌似有问题，加入条件时，条件不起作用？
+
+如何将sql查询出的结果写入到activerecord中？
+
+http://ysk.dlysmc.com/new/mobile.html
+itms-services://?action=download-manifest&url=https://app.boruicx.com/yunshang/yunshangke.plist
+
+
+2015-04-07:
+输出model对象
+id:<?=$model->id?></br>
+code:<?=$model->code?></br>
+name:<?=$model->name?></br>
+
+输出数组
+id:<?=$model['id']?></br>
+code:<?=$model['code']?></br>
+name:<?=$model['name']?></br>
+
+foreach ($model as $key => $value) {
+// 	var_dump($key);
+	var_dump($value);
+}
+
+view:
+<?php foreach ($model as $key => $value) {?>
+<tr>
+	<td><?=$value['id']?></td>
+	<td><?=$value['code']?></td>
+	<td><?=$value['name']?></td>
+</tr>
+<?php } ?>
+
+云商客：
+1、系统登录，并记住密码
+2、我的消息（消息与专题）
+3、个人中心
+3.1 会员等级
+3.2 基本资料（
+问题：如何认证我的资料？
+银行卡的作用是什么？
+我的资金托管在什么地方？
+结算时如何提取到我的银行卡？
+财务通账号的作用是什么？）
+
+
+
+
+http://t.cn/RAxwqZ9
+->
+http://test.ysk.dlysmc.com/wap.php/reg/index/invite_mobile/13724346621
+
+
+http://ysk.dlysmc.com/new/mobile.html
+
+微店主站：
+http://t.cn/RAxw5D3
+
+操作手册：
+http://www.xmgasy.com/yswd/index.html
+
+
+腾付通
+易宝支付
+
+
+
+
+
+
+
+
+
+
